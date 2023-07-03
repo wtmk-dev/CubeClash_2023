@@ -1,3 +1,4 @@
 
 *.dol
 *.elf
+build/CubeClash_2023.elf.map

@@ -3,56 +3,89 @@
 
 void Caster::Update()
 {
-    IsCharging = false;
+    if(_Controller == nullptr)
+    {
+        return;
+    }
 
-    if (_Controller->A_WasPressedThisFrame ||
-        _Controller->B_WasPressedThisFrame ||
-        _Controller->Y_WasPressedThisFrame ||
-        _Controller->X_WasPressedThisFrame) //is charging
+    float base = 0.1;
+
+    if (_Controller->A_WasHeldThisFrame ||
+        _Controller->B_WasHeldThisFrame ||
+        _Controller->Y_WasHeldThisFrame ||
+        _Controller->X_WasHeldThisFrame) //is charging
     {
         IsCharging = true;
-        if (WasChargingLastFrame)
+        if(Mana > 0)
         {
-            int base = 1;
             Charge += base + Combo * ChargeScaler;
-        }
-
-        WasChargingLastFrame = true;
+            Mana -= Charge * 0.01;
+        }    
     }
-    else
-    {
-        if (WasChargingLastFrame)
+    else if(_Controller->A_WasReleasedThisFrame ||
+            _Controller->B_WasReleasedThisFrame ||
+            _Controller->Y_WasReleasedThisFrame ||
+            _Controller->X_WasReleasedThisFrame)
         {
-            UpdateSpell();
-            UpdateTarget();
-            UpdateTargetPosition();
-        }
-        else
-        {
-            UpdatePosition();
+            if(IsCharging)
+            {
+                UpdateSpell();
+                IsCharging = false;
+                IsCasting = true;
+            }
         }
 
-        WasChargingLastFrame = false;
+    if(!IsCharging)
+    {
+        UpdatePosition();
+        UpdateTarget();
+
+        if(Mana < 100)
+        {
+            Mana += base + Combo * ChargeScaler;
+        }
+
+        if(Charge > 0)
+        {
+            Charge -= 1;
+        }
+    }else
+    {
+        UpdateTargetPosition();
     }
 }
 
 void Caster::UpdateTargetPosition()
 {
-    if(_Controller->Left_WasPressedThisFrame)
+    if(_Controller->Left_WasHeldThisFrame)
     {
         TargetPosition = 0;
-    }else if (_Controller->Right_WasPressedThisFrame)
+        IsCharging = false;
+    }
+    else
+    if (_Controller->Right_WasHeldThisFrame)
     {
         TargetPosition = 2;
-    }else
+        IsCharging = false;
+    }
+    else
+    if(_Controller->Up_WasHeldThisFrame)
     {
         TargetPosition = 1;
+        IsCharging = false;
     }
-    
 }
 
 void Caster::UpdateTarget()
 {
+    if(TargetChangeFrameDelay > 0)
+    {
+        TargetChangeFrameDelay--;
+        return;
+    }
+
+    TargetChangeFrameDelay = 6;
+
     if(_Controller->LT_WasPressedThisFrame)
     {
         if(Target > 0)
@@ -78,7 +111,7 @@ void Caster::UpdateTarget()
                 Target = 2;
             }
         }
-    }else if(_Controller->LT_WasPressedThisFrame)
+    }else if(_Controller->RT_WasPressedThisFrame)
     {
         if(Target < 3)
         {
@@ -108,19 +141,22 @@ void Caster::UpdateTarget()
 
 void Caster::UpdateSpell()
 {
-    if (_Controller->A_WasPressedThisFrame)
+    if (_Controller->A_WasReleasedThisFrame)
     {
         Spell = _Shield;
     }
-    else if (_Controller->B_WasPressedThisFrame)
+    
+    if (_Controller->B_WasReleasedThisFrame)
     {
         Spell = _Light;
     }
-    else if (_Controller->Y_WasPressedThisFrame)
+    
+    if (_Controller->Y_WasReleasedThisFrame)
     {
         Spell = _Fire;
     }
-    else if (_Controller->X_WasPressedThisFrame)
+    
+    if (_Controller->X_WasReleasedThisFrame)
     {
         Spell = _Water;
     }
@@ -191,7 +227,7 @@ void Caster::Reset()
     Target = -1;           // the place on screen you are trying to hit -1 is not assigned
     TargetPosition = 1;    // space on platform you are trying to hit: 1 is default
 
-    Spell = 0;             // what spell are you casting this frame: 0 shield, 1 fire, 2 water, 3 lighting
+    Spell = 0;             // what spell are you casting this frame:
 
     Combo = 0;             // how many hits before you have been hit increase damage
 

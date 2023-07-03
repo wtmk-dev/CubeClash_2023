@@ -56,11 +56,11 @@ main.o: \
  C:/devkitPro/libogc/include/ogc/pad.h \
  C:/devkitPro/libogc/include/ogc/lwp_watchdog.h \
  C:/devkitPro/libogc/include/ogc/lwp_queue.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/FreeMonoBold_ttf.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Blue01_png.h \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Game.h \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Controller.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Caster.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/FreeMonoBold_ttf.h
 C:/devkitPro/portlibs/gamecube/include/grrlib.h:
 C:/devkitPro/libogc/include/gccore.h:
 C:/devkitPro/libogc/include/ogc/dsp.h:
@@ -117,8 +117,8 @@ C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_texSetup.h:
 C:/devkitPro/libogc/include/ogc/pad.h:
 C:/devkitPro/libogc/include/ogc/lwp_watchdog.h:
 C:/devkitPro/libogc/include/ogc/lwp_queue.h:
-D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/FreeMonoBold_ttf.h:
-D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Blue01_png.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Game.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Controller.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Caster.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/FreeMonoBold_ttf.h:

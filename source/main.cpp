@@ -8,13 +8,11 @@
 #include <ogc/pad.h>
 #include <ogc/lwp_watchdog.h>   // Needed for gettime and ticks_to_millisecs
 
+#include "Game.h"
+#include "Caster.h"
+
 // Font
 #include "FreeMonoBold_ttf.h"
-
-//static image load
-#include "Blue01_png.h"
-#include "Game.h"
-#include "Controller.h"
 
 //RGBA Colors
 #define GRRLIB_BLACK   0x000000FF
@@ -39,17 +37,9 @@ static u8 CalculateFrameRate();
 
 int main(int argc, char **argv)
 {
-    bool ShowFPS = true;
+    bool ShowFPS = false;
 
-    Controller* Controllers[4];
-    Controllers[0] = new Controller(0);
-    Controllers[1] = new Controller(1);
-    Controllers[2] = new Controller(2);
-    Controllers[3] = new Controller(3);
-
-    Game* game = new Game(Controllers);
-    game->Start();
-
+    //Int GRRLIB
     // Initialise the Graphics & Video subsystem
     GRRLIB_Init();
 
@@ -58,9 +48,6 @@ int main(int argc, char **argv)
 
     // Load the font from memory
     GRRLIB_ttfFont* myFont = GRRLIB_LoadTTF(FreeMonoBold_ttf, FreeMonoBold_ttf_size);
-    GRRLIB_texImg* blueShip = GRRLIB_LoadTexturePNG(Blue01_png);
-    // Create an empty texture to store a copy of the screen
-    GRRLIB_texImg* CopiedImg = GRRLIB_CreateEmptyTexture(rmode->fbWidth, rmode->efbHeight);
 
     // Seed the random-number generator with current time so that
     // the numbers will be different every time we run.
@@ -72,17 +59,20 @@ int main(int argc, char **argv)
     // Black background
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
+    //Init Game    
+    Controller* Controllers[4];
+    Controllers[0] = new Controller(0);
+    Controllers[1] = new Controller(1);
+    Controllers[2] = new Controller(2);
+    Controllers[3] = new Controller(3);
+
+    Game* game = new Game(Controllers);
+    game->SetFont(myFont);
+    game->Start();
+
     // Loop forever
     while (1)
     {
-        GRRLIB_DrawImg(0, 0, CopiedImg, 0, 1, 1, 0xFFFFFFFF);
-
-        GRRLIB_Screen2Texture(0, 0, CopiedImg, false);
-
-        GRRLIB_PrintfTTF(0, 0, myFont, "hello world", 12, 0xFFFFFFFF);
-
-        GRRLIB_DrawImg(600, 400, blueShip, 0, 1, 1, GRRLIB_WHITE);
-
         if (ShowFPS == true)
         {
             char FPS[255];
@@ -90,48 +80,20 @@ int main(int argc, char **argv)
             GRRLIB_PrintfTTF(500 + 1, 25 + 1, myFont, FPS, 12, 0x000000FF);
             GRRLIB_PrintfTTF(500, 25, myFont, FPS, 12, 0xFFFFFFFF);
         }
-
-        PAD_ScanPads(); // Scan the GameCube controllers
-
-        if (PAD_ButtonsDown(0) & PAD_BUTTON_START)
-        {
-            break;
-        }
-        if (PAD_ButtonsDown(0) & PAD_BUTTON_A)
-        {
-            GRRLIB_Screen2Texture(0, 0, CopiedImg, false);
-        }
-        if (PAD_ButtonsDown(0) & PAD_BUTTON_B)
-        {
-            ShowFPS = !ShowFPS;
-        }
-
-        /*
-        if (PAD_StickY(0) > 18)
-        {
-            GRRLIB_PrintfTTF(0, 0, myFont, "hello world", 12, 0xFFFFFFFF);
-        }
-        if (PAD_StickY(0) < -18)
-        {
-            GRRLIB_PrintfTTF(0, 0, myFont, "", 12, 0xFFFFFFFF);
-        }
-        */
-
-        game->Update();
+    
+        PAD_ScanPads();  //Scan the GameCube controllers
+        game->Update();  //Update game logic
         GRRLIB_Render(); // Render the frame buffer to the TV
     }
-
-    GRRLIB_FreeTexture(CopiedImg);
-    GRRLIB_FreeTTF(myFont);
-    GRRLIB_FreeTexture(blueShip);
-    GRRLIB_Exit(); // Be a good boy, clear the memory allocated by GRRLIB
 
     for (int i = 0; i < 4; i++)
     {
         delete Controllers[i];
     }
+
     delete game;
 
+    GRRLIB_Exit(); // Be a good person, clear the memory allocated by GRRLIB
     return 0;
 }
 

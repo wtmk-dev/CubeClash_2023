@@ -9,16 +9,13 @@ class Caster
     void UpdateTarget();
     void UpdateSpell();
     void UpdatePosition();
-    void Update();
     int GetDefaultTarget();
     Controller* _Controller;
-    bool IsCharging;
-    bool WasChargingLastFrame;
     float ChargeScaler = 0.001f;
-    int _Shield = 0, _Fire = 1, _Light = 2, _Water = 3;
+    int TargetChangeFrameDelay;
     public:
     int Life;
-    int Mana;
+    float Mana;
     int Location;
     int Position;
     int Target;
@@ -29,6 +26,10 @@ class Caster
     void Init(Controller* controller);
     void SetController(Controller* controller);
     void Reset();
+    void Update();
+    bool IsCharging;
+    bool IsCasting;
+    int _Shield = 0, _Fire = 1, _Light = 2, _Water = 3;
 };
 
 #endif
