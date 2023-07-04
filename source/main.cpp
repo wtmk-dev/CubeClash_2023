@@ -14,6 +14,13 @@
 // Font
 #include "FreeMonoBold_ttf.h"
 
+// Assets
+#include "mage1_png.h"
+#include "mage2_png.h"
+#include "mage3_png.h"
+#include "mage4_png.h"
+#include "Blue01_png.h"
+
 //RGBA Colors
 #define GRRLIB_BLACK   0x000000FF
 #define GRRLIB_MAROON  0x800000FF
@@ -57,8 +64,13 @@ int main(int argc, char **argv)
     GRRLIB_Settings.antialias = true;
 
     // Black background
-    GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
+    GRRLIB_SetBackgroundColour(0xE6, 0xE6, 0xFA, 0xFF);
 
+    GRRLIB_texImg* mage1 = GRRLIB_LoadTexturePNG(mage1_png);
+    GRRLIB_texImg* mage2 = GRRLIB_LoadTexturePNG(mage2_png);
+    GRRLIB_texImg* mage3 = GRRLIB_LoadTexturePNG(mage3_png);
+    GRRLIB_texImg* mage4 = GRRLIB_LoadTexturePNG(mage4_png);
+    
     //Init Game    
     Controller* Controllers[4];
     Controllers[0] = new Controller(0);
@@ -70,6 +82,8 @@ int main(int argc, char **argv)
     game->SetFont(myFont);
     game->Start();
 
+    
+
     // Loop forever
     while (1)
     {
@@ -80,9 +94,13 @@ int main(int argc, char **argv)
             GRRLIB_PrintfTTF(500 + 1, 25 + 1, myFont, FPS, 12, 0x000000FF);
             GRRLIB_PrintfTTF(500, 25, myFont, FPS, 12, 0xFFFFFFFF);
         }
-    
+
         PAD_ScanPads();  //Scan the GameCube controllers
         game->Update();  //Update game logic
+        GRRLIB_DrawImg(30 , 80, mage1, 0, 1, 1, 0xFFFFFFFF);
+        GRRLIB_DrawImg(395, 80, mage2, 0, 1, 1, 0xFFFFFFFF);
+        GRRLIB_DrawImg(30, 275, mage3, 0, 1, 1, 0xFFFFFFFF);
+        GRRLIB_DrawImg(395 , 275, mage4, 0, 1, 1, 0xFFFFFFFF);
         GRRLIB_Render(); // Render the frame buffer to the TV
     }
 
@@ -92,6 +110,11 @@ int main(int argc, char **argv)
     }
 
     delete game;
+
+    GRRLIB_FreeTexture(mage1);
+    GRRLIB_FreeTexture(mage2);
+    GRRLIB_FreeTexture(mage3);
+    GRRLIB_FreeTexture(mage4);
 
     GRRLIB_Exit(); // Be a good person, clear the memory allocated by GRRLIB
     return 0;

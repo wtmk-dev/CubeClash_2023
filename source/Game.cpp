@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 Game::Game(Controller* controllers[])
 {    
     for (int i = 0; i < MAX_CONTROLLERS; i++)
@@ -19,7 +20,10 @@ Game::Game(Controller* controllers[])
 
 Game::~Game()
 {
-
+    for (int i = 0; i < MAX_CONTROLLERS; i++)
+    {
+        delete _Casters[i];
+    }
 }
 
 void Game::Start()
