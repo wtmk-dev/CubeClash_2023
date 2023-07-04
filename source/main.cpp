@@ -15,11 +15,10 @@
 #include "FreeMonoBold_ttf.h"
 
 // Assets
-#include "mage1_png.h"
-#include "mage2_png.h"
-#include "mage3_png.h"
-#include "mage4_png.h"
-#include "Blue01_png.h"
+#include "Mage1Idle_png.h"
+#include "Mage2Idle_png.h"
+#include "Mage3Idle_png.h"
+#include "Mage4Idle_png.h"
 
 //RGBA Colors
 #define GRRLIB_BLACK   0x000000FF
@@ -66,10 +65,17 @@ int main(int argc, char **argv)
     // Black background
     GRRLIB_SetBackgroundColour(0xE6, 0xE6, 0xFA, 0xFF);
 
-    GRRLIB_texImg* mage1 = GRRLIB_LoadTexturePNG(mage1_png);
-    GRRLIB_texImg* mage2 = GRRLIB_LoadTexturePNG(mage2_png);
-    GRRLIB_texImg* mage3 = GRRLIB_LoadTexturePNG(mage3_png);
-    GRRLIB_texImg* mage4 = GRRLIB_LoadTexturePNG(mage4_png);
+    GRRLIB_texImg* mage1Idle = GRRLIB_LoadTexturePNG(Mage1Idle_png);
+    GRRLIB_InitTileSet(mage1Idle, 64, 96, 0);
+
+    GRRLIB_texImg* mage2 = GRRLIB_LoadTexturePNG(Mage2Idle_png);
+    GRRLIB_InitTileSet(mage2, 64, 96, 0);
+
+    GRRLIB_texImg* mage3 = GRRLIB_LoadTexturePNG(Mage3Idle_png);
+    GRRLIB_InitTileSet(mage3, 64, 96, 0);
+
+    GRRLIB_texImg* mage4 = GRRLIB_LoadTexturePNG(Mage4Idle_png);
+    GRRLIB_InitTileSet(mage4, 64, 96, 0);
     
     //Init Game    
     Controller* Controllers[4];
@@ -82,8 +88,8 @@ int main(int argc, char **argv)
     game->SetFont(myFont);
     game->Start();
 
-    
-
+    int frame = 0;
+    int frameDelay = 3;
     // Loop forever
     while (1)
     {
@@ -97,10 +103,25 @@ int main(int argc, char **argv)
 
         PAD_ScanPads();  //Scan the GameCube controllers
         game->Update();  //Update game logic
-        GRRLIB_DrawImg(30 , 80, mage1, 0, 1, 1, 0xFFFFFFFF);
-        GRRLIB_DrawImg(395, 80, mage2, 0, 1, 1, 0xFFFFFFFF);
-        GRRLIB_DrawImg(30, 275, mage3, 0, 1, 1, 0xFFFFFFFF);
-        GRRLIB_DrawImg(395 , 275, mage4, 0, 1, 1, 0xFFFFFFFF);
+        GRRLIB_DrawTile(30,80, mage1Idle, 0, 1, 1, 0xFFFFFFFF, frame);
+        GRRLIB_DrawTile(395, 80, mage2, 0, 1, 1, 0xFFFFFFFF, frame);
+        GRRLIB_DrawTile(30, 275, mage3, 0, 1, 1, 0xFFFFFFFF, frame);
+        GRRLIB_DrawTile(395 , 275, mage4, 0, 1, 1, 0xFFFFFFFF, frame);
+
+        if(frameDelay > 0)
+        {
+            frameDelay--;
+        }else{
+            frameDelay = 3;
+            frame++;
+            if(frame >= 5)
+            {
+                frame = 0;
+            }
+        }
+
+        
+
         GRRLIB_Render(); // Render the frame buffer to the TV
     }
 
@@ -111,7 +132,7 @@ int main(int argc, char **argv)
 
     delete game;
 
-    GRRLIB_FreeTexture(mage1);
+    GRRLIB_FreeTexture(mage1Idle);
     GRRLIB_FreeTexture(mage2);
     GRRLIB_FreeTexture(mage3);
     GRRLIB_FreeTexture(mage4);

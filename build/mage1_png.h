@@ -6,7 +6,7 @@
 extern const uint8_t mage1_png[];
 extern const uint8_t mage1_png_end[];
 #if __cplusplus >= 201103L
-static constexpr size_t mage1_png_size=4197;
+static constexpr size_t mage1_png_size=6016;
 #else
-static const size_t mage1_png_size=4197;
+static const size_t mage1_png_size=6016;
 #endif
