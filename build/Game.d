@@ -56,7 +56,13 @@ Game.o: \
  C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_handle.h \
  C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_pixel.h \
  C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_settings.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_texSetup.h
+ C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_texSetup.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage1Idle_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage2Idle_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage3Idle_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage4Idle_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Title_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mode_png.h
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Game.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Controller.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h:
@@ -114,3 +120,9 @@ C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_handle.h:
 C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_pixel.h:
 C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_settings.h:
 C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_texSetup.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage1Idle_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage2Idle_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage3Idle_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage4Idle_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Title_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mode_png.h:

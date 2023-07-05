@@ -4,6 +4,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//Assets
+#include "Mage1Idle_png.h"
+#include "Mage2Idle_png.h"
+#include "Mage3Idle_png.h"
+#include "Mage4Idle_png.h"
+#include "Title_png.h"
+#include "Mode_png.h"
 
 Game::Game(Controller* controllers[])
 {    
@@ -24,14 +31,42 @@ Game::~Game()
     {
         delete _Casters[i];
     }
+
+    GRRLIB_FreeTexture(title);
+    GRRLIB_FreeTexture(mode);
+
+    /*
+    GRRLIB_FreeTexture(mage1Idle);
+    GRRLIB_FreeTexture(mage2);
+    GRRLIB_FreeTexture(mage3);
+    GRRLIB_FreeTexture(mage4);
+    */
 }
 
 void Game::Start()
 {
+    screen = lobby;
     _Casters[0]->Init(_Controllers[0]);
     _Casters[1]->Init(_Controllers[1]);
     _Casters[2]->Init(_Controllers[2]);
     _Casters[3]->Init(_Controllers[3]);
+
+    title = GRRLIB_LoadTexturePNG(Title_png);
+    mode = GRRLIB_LoadTexturePNG(Mode_png);
+
+    /*
+    mage1Idle = GRRLIB_LoadTexturePNG(Mage1Idle_png);
+    GRRLIB_InitTileSet(mage1Idle, 64, 96, 0);
+
+    mage2 = GRRLIB_LoadTexturePNG(Mage2Idle_png);
+    GRRLIB_InitTileSet(mage2, 64, 96, 0);
+
+    mage3 = GRRLIB_LoadTexturePNG(Mage3Idle_png);
+    GRRLIB_InitTileSet(mage3, 64, 96, 0);
+
+    mage4 = GRRLIB_LoadTexturePNG(Mage4Idle_png);
+    GRRLIB_InitTileSet(mage4, 64, 96, 0);
+    */
 }
 
 void Game::Update()
@@ -43,19 +78,99 @@ void Game::Update()
             _Controllers[i]->Update();
         }
     }
+
+    if(screen == start)
+        {
+            GRRLIB_SetBackgroundColour(0x0D, 0x37, 0x00, 0xFF);
+            GRRLIB_DrawImg(60, 30, title, 0, 1, 1, 0xFFFFFFFF);
+
+            if(!_Controllers[0]->A_WasHeldThisFrame)
+            {
+                std::string start = "- Hold A -";
+                auto cstart = start.c_str();
+
+                GRRLIB_PrintfTTF(300 + 1, 320 + 1, _Font, cstart, 12, 0x000000FF);
+                GRRLIB_PrintfTTF(300, 320, _Font, cstart, 12, 0xFFFFFFFF);    
+            }else
+            {
+                GRRLIB_DrawImg(100, 300, mode, 0, 1, 1, 0xFFFFFFFF);
+
+                std::string noob = "_ Hold LEFT for noob mode";
+                auto cnoob = noob.c_str();
+                GRRLIB_PrintfTTF(150 + 1, 340 + 1, _Font, cnoob, 12, 0x000000FF);
+
+                std::string pvp = "_ Hold RIGHT for pvp mode";
+                auto cpvp = pvp.c_str();
+                GRRLIB_PrintfTTF(150 + 1, 360 + 1, _Font, cpvp, 12, 0x000000FF);
+
+                if(_Controllers[0]->Right_WasHeldThisFrame)
+                {
+                    screen = lobby;
+                }else if(_Controllers[0]->Right_WasHeldThisFrame)
+                {
+                    screen = tutorial;
+                }
+            }
+
+        }else if(screen == arena)
+        {
+            
+            GRRLIB_SetBackgroundColour(0xFF, 0xD7, 0x00, 0xFF);
+
+            //GRRLIB_DrawTile(30,80, mage1Idle, 0, 1, 1, 0xFFFFFFFF, frame);
+            //GRRLIB_DrawTile(395, 80, mage2, 0, 1, 1, 0xFFFFFFFF, frame);
+            //GRRLIB_DrawTile(30, 275, mage3, 0, 1, 1, 0xFFFFFFFF, frame);
+            //GRRLIB_DrawTile(395 , 275, mage4, 0, 1, 1, 0xFFFFFFFF, frame);
+        }else if(screen == tutorial)
+        {
+            
+
+        }else if(screen == lobby)
+        {
+            GRRLIB_SetBackgroundColour(0x37, 0x0D, 0x00, 0xFF);
+            auto x = 640/4;
+            GRRLIB_Line(1,480,1,0, 0xFFFFFFFF);
+            GRRLIB_Line(x,480,x,0, 0xFFFFFFFF);
+            GRRLIB_Line(x*2,480,x*2,0, 0xFFFFFFFF);
+            GRRLIB_Line(x*3,480,x*3,0, 0xFFFFFFFF);
+            GRRLIB_Line(640,480,640,0, 0xFFFFFFFF);
+
+            auto holdPos = 30;
+
+            for (int i = 0; i < MAX_CONTROLLERS; i++)
+            {
+                std::string noob = "- Hold START -";
+                auto cnoob = noob.c_str();
+
+                if(i > 0)
+                {
+                    holdPos += 160;
+                }
+
+                GRRLIB_PrintfTTF(holdPos, 340 + 1, _Font, cnoob, 12, 0x000000FF);
+            }
+
+        }else if(screen == credits)
+        {
+            
+        }
     
     for(int i = 0; i < MAX_CONTROLLERS; i++)
     {
         if(_Casters[i] != nullptr)
         {
             _Casters[i]->Update();
-            UpdatePosition(_Casters[i],120,480-160,80,640-200,1);
-            UpdateLife(_Casters[i],185+25-10,480-100+15,25,640-255,1);
-            UpdateMana(_Casters[i],195+25-10,480-60-25+10,25,640-255,1);
-            UpdateCombo(_Casters[i],100,480-185,110,640-170,1);
-            UpdateCharging(_Casters[i],160+25-10,480-120+10,30,640-250,1);
-            UpdateSpell(_Casters[i],175+25-10,480-110+15,25,640-255,1);
-            UpdateTarget(_Casters[i],60,480-195-25,10,640-280,1);
+
+            if(screen == arena)
+            {
+                UpdatePosition(_Casters[i],120,480-160,80,640-200,1);
+                UpdateLife(_Casters[i],185+25-10,480-100+15,25,640-255,1);
+                UpdateMana(_Casters[i],195+25-10,480-60-25+10,25,640-255,1);
+                UpdateCombo(_Casters[i],100,480-185,110,640-170,1);
+                UpdateCharging(_Casters[i],160+25-10,480-120+10,30,640-250,1);
+                UpdateSpell(_Casters[i],175+25-10,480-110+15,25,640-255,1);
+                UpdateTarget(_Casters[i],60,480-195-25,10,640-280,1);
+            }
         }
     }
 
@@ -66,6 +181,7 @@ void Game::Update()
             ResloveFrame(_Casters[i]);
         }
     }
+    
 }
 
 void Game::ResloveFrame(Caster* caster)

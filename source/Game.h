@@ -12,6 +12,14 @@ private:
     Controller* _Controllers[MAX_CONTROLLERS];
     Caster* _Casters[MAX_CONTROLLERS];
     GRRLIB_ttfFont* _Font;
+    GRRLIB_texImg* title; 
+    GRRLIB_texImg* mode, mage1Idle, mage2, mage3, mage4;
+    int screen = 0; 
+    int start = 0;
+    int tutorial = 1; 
+    int lobby = 2; 
+    int arena = 3; 
+    int credits = 4;
     void UpdatePosition(Caster* caster, int topY, int botY, int leftX, int rightX, int offset);
     void UpdateLife(Caster* caster, int topY, int botY, int leftX, int rightX, int offset);
     void UpdateMana(Caster* caster, int topY, int botY, int leftX, int rightX, int offset);
