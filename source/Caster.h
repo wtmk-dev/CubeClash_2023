@@ -29,7 +29,10 @@ class Caster
     void Update();
     bool IsCharging;
     bool IsCasting;
+    bool IsInLobby;
+    bool IsLockedIn;
     int _Shield = 0, _Fire = 1, _Light = 2, _Water = 3;
+    int MageSelection = 0;
 };
 
 #endif

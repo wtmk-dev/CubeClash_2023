@@ -14,6 +14,8 @@ private:
     GRRLIB_ttfFont* _Font;
     GRRLIB_texImg* title; 
     GRRLIB_texImg* mode, mage1Idle, mage2, mage3, mage4;
+    GRRLIB_texImg* _MageSelection[5];
+    GRRLIB_texImg* _MageIdle[MAX_CONTROLLERS];
     int screen = 0; 
     int start = 0;
     int tutorial = 1; 

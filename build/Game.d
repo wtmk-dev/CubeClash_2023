@@ -62,7 +62,12 @@ Game.o: \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage3Idle_png.h \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage4Idle_png.h \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Title_png.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mode_png.h
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mode_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m1select_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m2select_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m3select_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m4select_png.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m5select_png.h
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Game.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Controller.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h:
@@ -126,3 +131,8 @@ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage3Idle_png.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mage4Idle_png.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Title_png.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/Mode_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m1select_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m2select_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m3select_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m4select_png.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/m5select_png.h:

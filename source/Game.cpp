@@ -11,6 +11,11 @@
 #include "Mage4Idle_png.h"
 #include "Title_png.h"
 #include "Mode_png.h"
+#include "m1select_png.h"
+#include "m2select_png.h"
+#include "m3select_png.h"
+#include "m4select_png.h"
+#include "m5select_png.h"
 
 Game::Game(Controller* controllers[])
 {    
@@ -51,22 +56,27 @@ void Game::Start()
     _Casters[2]->Init(_Controllers[2]);
     _Casters[3]->Init(_Controllers[3]);
 
+    _MageSelection[0] = GRRLIB_LoadTexturePNG(m1select_png);
+    _MageSelection[1] = GRRLIB_LoadTexturePNG(m2select_png);
+    _MageSelection[2] = GRRLIB_LoadTexturePNG(m3select_png);
+    _MageSelection[3] = GRRLIB_LoadTexturePNG(m4select_png);
+    _MageSelection[4] = GRRLIB_LoadTexturePNG(m5select_png);
+
     title = GRRLIB_LoadTexturePNG(Title_png);
     mode = GRRLIB_LoadTexturePNG(Mode_png);
 
-    /*
-    mage1Idle = GRRLIB_LoadTexturePNG(Mage1Idle_png);
-    GRRLIB_InitTileSet(mage1Idle, 64, 96, 0);
+    _MageIdle[0] = GRRLIB_LoadTexturePNG(Mage1Idle_png);
+    _MageIdle[1] = GRRLIB_LoadTexturePNG(Mage2Idle_png);
+    _MageIdle[2] = GRRLIB_LoadTexturePNG(Mage3Idle_png);
+    _MageIdle[3] = GRRLIB_LoadTexturePNG(Mage4Idle_png);
 
-    mage2 = GRRLIB_LoadTexturePNG(Mage2Idle_png);
-    GRRLIB_InitTileSet(mage2, 64, 96, 0);
-
-    mage3 = GRRLIB_LoadTexturePNG(Mage3Idle_png);
-    GRRLIB_InitTileSet(mage3, 64, 96, 0);
-
-    mage4 = GRRLIB_LoadTexturePNG(Mage4Idle_png);
-    GRRLIB_InitTileSet(mage4, 64, 96, 0);
-    */
+    for (int i = 0; i < MAX_CONTROLLERS; i++)
+    {
+        if (_MageIdle[i] != nullptr)
+        {
+            GRRLIB_InitTileSet(_MageIdle[i], 64, 96, 0);
+        }
+    }
 }
 
 void Game::Update()
@@ -129,26 +139,87 @@ void Game::Update()
         {
             GRRLIB_SetBackgroundColour(0x37, 0x0D, 0x00, 0xFF);
             auto x = 640/4;
-            GRRLIB_Line(1,480,1,0, 0xFFFFFFFF);
-            GRRLIB_Line(x,480,x,0, 0xFFFFFFFF);
-            GRRLIB_Line(x*2,480,x*2,0, 0xFFFFFFFF);
-            GRRLIB_Line(x*3,480,x*3,0, 0xFFFFFFFF);
-            GRRLIB_Line(640,480,640,0, 0xFFFFFFFF);
-
             auto holdPos = 30;
 
             for (int i = 0; i < MAX_CONTROLLERS; i++)
             {
-                std::string noob = "- Hold START -";
-                auto cnoob = noob.c_str();
+                auto caster = _Casters[i];
+                auto controller = _Controllers[i];
 
                 if(i > 0)
                 {
                     holdPos += 160;
                 }
 
-                GRRLIB_PrintfTTF(holdPos, 340 + 1, _Font, cnoob, 12, 0x000000FF);
+                if(!caster->IsInLobby)
+                {
+                    std::string noob = " - Press A -";
+                    auto cnoob = noob.c_str();
+
+                    GRRLIB_PrintfTTF(holdPos, 340 + 1, _Font, cnoob, 12, 0xFFFFFFFF);
+                }else
+                {
+                    auto offset = 160;
+
+                    if(i > 0)
+                    {
+                        offset *= i;
+                    }else{
+                        offset = 0;
+                    }
+
+                    if(!caster->IsLockedIn)
+                    {
+                        GRRLIB_DrawImg(offset, 0, _MageSelection[caster->MageSelection], 0, 1, 1, 0xFFFFFFFF);
+
+                        if(controller->Left_WasPressedThisFrame)
+                        {
+                            if(caster->MageSelection > 0)
+                            {
+                                caster->MageSelection--;
+                            }
+                        }else if(controller->Right_WasPressedThisFrame)
+                        {
+                            if(caster->MageSelection < 3)
+                            {
+                                caster->MageSelection++;
+                            }
+                        }
+
+                        if(controller->A_WasPressedThisFrame)
+                        {
+                            caster->IsLockedIn = true;
+                        }
+                    }else
+                    {
+                        GRRLIB_DrawImg(offset, 0, _MageSelection[4], 0, 1, 1, 0xFFFFFFFF);
+
+                        if(controller->B_WasPressedThisFrame)
+                        {
+                            caster->IsLockedIn = false;
+                        }
+                    }
+                    
+                }
+
+                if(controller->A_WasPressedThisFrame)
+                {
+                    if(!caster->IsInLobby)
+                    {
+                        caster->IsInLobby = true;
+                    }
+                }
             }
+
+            GRRLIB_Line(3,480,3,0, 0x000000FF);
+            GRRLIB_Line(2,480,2,0, 0x000000FF);
+            GRRLIB_Line(1,480,1,0, 0x000000FF);
+            GRRLIB_Line(x,480,x,0, 0x000000FF);
+            GRRLIB_Line(x*2,480,x*2,0, 0x000000FF);
+            GRRLIB_Line(x*3,480,x*3,0, 0x000000FF);
+            GRRLIB_Line(638,480,638,0, 0x000000FF);
+            GRRLIB_Line(639,480,639,0, 0x000000FF);
+            GRRLIB_Line(640,480,640,0, 0x000000FF);
 
         }else if(screen == credits)
         {
