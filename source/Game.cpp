@@ -90,138 +90,187 @@ void Game::Update()
     }
 
     if(screen == start)
+    {
+        GRRLIB_SetBackgroundColour(0x0D, 0x37, 0x00, 0xFF);
+        GRRLIB_DrawImg(60, 30, title, 0, 1, 1, 0xFFFFFFFF);
+
+        if(!_Controllers[0]->A_WasHeldThisFrame)
         {
-            GRRLIB_SetBackgroundColour(0x0D, 0x37, 0x00, 0xFF);
-            GRRLIB_DrawImg(60, 30, title, 0, 1, 1, 0xFFFFFFFF);
+            std::string start = "- Hold A -";
+            auto cstart = start.c_str();
 
-            if(!_Controllers[0]->A_WasHeldThisFrame)
+            GRRLIB_PrintfTTF(300 + 1, 320 + 1, _Font, cstart, 12, 0x000000FF);
+            GRRLIB_PrintfTTF(300, 320, _Font, cstart, 12, 0xFFFFFFFF);    
+        }else
+        {
+            GRRLIB_DrawImg(100, 300, mode, 0, 1, 1, 0xFFFFFFFF);
+
+            std::string noob = "_ Hold LEFT for noob mode";
+            auto cnoob = noob.c_str();
+            GRRLIB_PrintfTTF(150 + 1, 340 + 1, _Font, cnoob, 12, 0x000000FF);
+
+            std::string pvp = "_ Hold RIGHT for pvp mode";
+            auto cpvp = pvp.c_str();
+            GRRLIB_PrintfTTF(150 + 1, 360 + 1, _Font, cpvp, 12, 0x000000FF);
+
+            if(_Controllers[0]->Right_WasHeldThisFrame)
             {
-                std::string start = "- Hold A -";
-                auto cstart = start.c_str();
-
-                GRRLIB_PrintfTTF(300 + 1, 320 + 1, _Font, cstart, 12, 0x000000FF);
-                GRRLIB_PrintfTTF(300, 320, _Font, cstart, 12, 0xFFFFFFFF);    
-            }else
+                screen = lobby;
+            }else if(_Controllers[0]->Right_WasHeldThisFrame)
             {
-                GRRLIB_DrawImg(100, 300, mode, 0, 1, 1, 0xFFFFFFFF);
+                screen = tutorial;
+            }
+        }
 
-                std::string noob = "_ Hold LEFT for noob mode";
-                auto cnoob = noob.c_str();
-                GRRLIB_PrintfTTF(150 + 1, 340 + 1, _Font, cnoob, 12, 0x000000FF);
+    }else if(screen == tutorial)
+    {
 
-                std::string pvp = "_ Hold RIGHT for pvp mode";
-                auto cpvp = pvp.c_str();
-                GRRLIB_PrintfTTF(150 + 1, 360 + 1, _Font, cpvp, 12, 0x000000FF);
+    }else if(screen == lobby)
+    {
+        GRRLIB_SetBackgroundColour(0x37, 0x0D, 0x00, 0xFF);
+        auto x = 640/4;
+        auto holdPos = 30;
+                
+        auto readyCount = 0;
+        auto lobbyCount = 0;
 
-                if(_Controllers[0]->Right_WasHeldThisFrame)
-                {
-                    screen = lobby;
-                }else if(_Controllers[0]->Right_WasHeldThisFrame)
-                {
-                    screen = tutorial;
-                }
+        for (int i = 0; i < MAX_CONTROLLERS; i++)
+        {
+            auto caster = _Casters[i];
+            if(caster->IsLockedIn)
+            {
+                readyCount++;
             }
 
-        }else if(screen == arena)
-        {
-            
-            GRRLIB_SetBackgroundColour(0xFF, 0xD7, 0x00, 0xFF);
-
-            //GRRLIB_DrawTile(30,80, mage1Idle, 0, 1, 1, 0xFFFFFFFF, frame);
-            //GRRLIB_DrawTile(395, 80, mage2, 0, 1, 1, 0xFFFFFFFF, frame);
-            //GRRLIB_DrawTile(30, 275, mage3, 0, 1, 1, 0xFFFFFFFF, frame);
-            //GRRLIB_DrawTile(395 , 275, mage4, 0, 1, 1, 0xFFFFFFFF, frame);
-        }else if(screen == tutorial)
-        {
-            
-
-        }else if(screen == lobby)
-        {
-            GRRLIB_SetBackgroundColour(0x37, 0x0D, 0x00, 0xFF);
-            auto x = 640/4;
-            auto holdPos = 30;
-
-            for (int i = 0; i < MAX_CONTROLLERS; i++)
+            if(caster->IsInLobby)
             {
-                auto caster = _Casters[i];
-                auto controller = _Controllers[i];
+                lobbyCount++;
+            }
+        }
+
+        if(lobbyCount >= 1)
+        {
+            if(readyCount == lobbyCount)
+            {
+                if(!allReady)
+                {
+                    transitionDelay = 0;
+                }
+
+                allReady = true;
+            }else
+            {
+                allReady = false;
+            }
+        }
+
+        if(allReady)
+        {
+            transitionDelay++;
+            GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
+
+            if(transitionDelay >= 60)
+            {
+                GRRLIB_SetBackgroundColour(0xC0, 0xC0, 0xC0, 0xFF);
+            }
+
+            if(transitionDelay >= 120)
+            {
+                GRRLIB_SetBackgroundColour(0x80, 0x80, 0x80, 0xFF);
+            }
+            
+            if(transitionDelay >= 180)
+            {
+                GRRLIB_SetBackgroundColour(0x40, 0x40, 0x40, 0xFF);
+            }
+
+            if(transitionDelay >= 240)
+            {
+                screen = arena;
+            }
+        }
+
+        for (int i = 0; i < MAX_CONTROLLERS; i++)
+        {
+            auto caster = _Casters[i];
+            auto controller = _Controllers[i];
+
+            if(i > 0)
+            {
+                holdPos += 160;
+            }
+
+            if(!caster->IsInLobby)
+            {
+                std::string noob = " - Press A -";
+                auto cnoob = noob.c_str();
+
+                GRRLIB_PrintfTTF(holdPos, 340 + 1, _Font, cnoob, 12, 0xFFFFFFFF);
+            }else
+            {
+                auto offset = 160;
 
                 if(i > 0)
                 {
-                    holdPos += 160;
+                    offset *= i;
+                }else{
+                    offset = 0;
                 }
 
-                if(!caster->IsInLobby)
+                if(!caster->IsLockedIn)
                 {
-                    std::string noob = " - Press A -";
-                    auto cnoob = noob.c_str();
+                    GRRLIB_DrawImg(offset, 0, _MageSelection[caster->MageSelection], 0, 1, 1, 0xFFFFFFFF);
 
-                    GRRLIB_PrintfTTF(holdPos, 340 + 1, _Font, cnoob, 12, 0xFFFFFFFF);
+                    if(controller->Left_WasPressedThisFrame)
+                    {
+                        if(caster->MageSelection > 0)
+                        {
+                            caster->MageSelection--;
+                        }
+                    }else if(controller->Right_WasPressedThisFrame)
+                    {
+                        if(caster->MageSelection < 3)
+                        {
+                            caster->MageSelection++;
+                        }
+                    }
+
+                    if(controller->A_WasPressedThisFrame)
+                    {
+                        caster->IsLockedIn = true;
+                    }
                 }else
                 {
-                    auto offset = 160;
+                    GRRLIB_DrawImg(offset, 0, _MageSelection[4], 0, 1, 1, 0xFFFFFFFF);
 
-                    if(i > 0)
+                    if(controller->B_WasPressedThisFrame)
                     {
-                        offset *= i;
-                    }else{
-                        offset = 0;
-                    }
-
-                    if(!caster->IsLockedIn)
-                    {
-                        GRRLIB_DrawImg(offset, 0, _MageSelection[caster->MageSelection], 0, 1, 1, 0xFFFFFFFF);
-
-                        if(controller->Left_WasPressedThisFrame)
-                        {
-                            if(caster->MageSelection > 0)
-                            {
-                                caster->MageSelection--;
-                            }
-                        }else if(controller->Right_WasPressedThisFrame)
-                        {
-                            if(caster->MageSelection < 3)
-                            {
-                                caster->MageSelection++;
-                            }
-                        }
-
-                        if(controller->A_WasPressedThisFrame)
-                        {
-                            caster->IsLockedIn = true;
-                        }
-                    }else
-                    {
-                        GRRLIB_DrawImg(offset, 0, _MageSelection[4], 0, 1, 1, 0xFFFFFFFF);
-
-                        if(controller->B_WasPressedThisFrame)
-                        {
-                            caster->IsLockedIn = false;
-                        }
-                    }
-                    
-                }
-
-                if(controller->A_WasPressedThisFrame)
-                {
-                    if(!caster->IsInLobby)
-                    {
-                        caster->IsInLobby = true;
+                        caster->IsLockedIn = false;
                     }
                 }
+                
             }
 
-            GRRLIB_Line(3,480,3,0, 0x000000FF);
-            GRRLIB_Line(2,480,2,0, 0x000000FF);
-            GRRLIB_Line(1,480,1,0, 0x000000FF);
-            GRRLIB_Line(x,480,x,0, 0x000000FF);
-            GRRLIB_Line(x*2,480,x*2,0, 0x000000FF);
-            GRRLIB_Line(x*3,480,x*3,0, 0x000000FF);
-            GRRLIB_Line(638,480,638,0, 0x000000FF);
-            GRRLIB_Line(639,480,639,0, 0x000000FF);
-            GRRLIB_Line(640,480,640,0, 0x000000FF);
+            if(controller->A_WasPressedThisFrame)
+            {
+                if(!caster->IsInLobby)
+                {
+                    caster->IsInLobby = true;
+                }
+            }
+        }
 
-        }else if(screen == credits)
+        GRRLIB_Line(3,480,3,0, 0x000000FF);
+        GRRLIB_Line(2,480,2,0, 0x000000FF);
+        GRRLIB_Line(1,480,1,0, 0x000000FF);
+        GRRLIB_Line(x,480,x,0, 0x000000FF);
+        GRRLIB_Line(x*2,480,x*2,0, 0x000000FF);
+        GRRLIB_Line(x*3,480,x*3,0, 0x000000FF);
+        GRRLIB_Line(638,480,638,0, 0x000000FF);
+        GRRLIB_Line(639,480,639,0, 0x000000FF);
+        GRRLIB_Line(640,480,640,0, 0x000000FF);
+
+    }else if(screen == credits)
         {
             
         }
@@ -231,19 +280,8 @@ void Game::Update()
         if(_Casters[i] != nullptr)
         {
             _Casters[i]->Update();
-
-            if(screen == arena)
-            {
-                UpdatePosition(_Casters[i],120,480-160,80,640-200,1);
-                UpdateLife(_Casters[i],185+25-10,480-100+15,25,640-255,1);
-                UpdateMana(_Casters[i],195+25-10,480-60-25+10,25,640-255,1);
-                UpdateCombo(_Casters[i],100,480-185,110,640-170,1);
-                UpdateCharging(_Casters[i],160+25-10,480-120+10,30,640-250,1);
-                UpdateSpell(_Casters[i],175+25-10,480-110+15,25,640-255,1);
-                UpdateTarget(_Casters[i],60,480-195-25,10,640-280,1);
-            }
         }
-    }
+    } // update inputs from frame
 
     for(int i = 0; i < MAX_CONTROLLERS; i++)
     {
@@ -251,8 +289,66 @@ void Game::Update()
         {
             ResloveFrame(_Casters[i]);
         }
-    }
-    
+    } // update game state
+
+    if(screen == arena)
+    {
+        GRRLIB_SetBackgroundColour(0xFF, 0xD7, 0x32, 0xFF);
+
+        if(animationFrame > 4)
+        {
+            animationFrame = 0;
+        }
+
+        auto leftX = 30;
+        auto rightX = 460;
+        auto topY = 80;
+        auto botY = 275;
+
+        for(int i = 0; i < MAX_CONTROLLERS; i++)
+        {
+            UpdateLife(_Casters[i],185+25-10,480-100+15,25,640-255,1);
+            UpdateMana(_Casters[i],195+25-10,480-60-25+10,25,640-255,1);
+            UpdateCombo(_Casters[i],100,480-185,110+45,640-170+45,1);
+            UpdateCharging(_Casters[i],160+25-10,480-120+10,30,640-250,1);
+            UpdateSpell(_Casters[i],175+25-10,480-110+15,25,640-255,1);
+            UpdateTarget(_Casters[i],60,480-195-25,10,640-280,1);
+            UpdatePosition(_Casters[i],60-25,480-195-25-25,10,640-280,1);
+        }
+        
+        auto p1posX = leftX;
+        auto p2posX = rightX;
+        auto p3posX = leftX;
+        auto p4posX = rightX;
+
+        if(_Casters[0]->Position > 0)
+        {
+            p1posX += 32 * _Casters[0]->Position;
+        }
+
+        if(_Casters[1]->Position > 0)
+        {
+            p2posX += 32 * _Casters[1]->Position;
+        }
+
+        if(_Casters[2]->Position > 0)
+        {
+            p3posX += 32 * _Casters[0]->Position;
+        }
+
+        if(_Casters[3]->Position > 0)
+        {
+            p4posX += 32 * _Casters[1]->Position;
+        }
+
+        GRRLIB_DrawTile(p1posX, topY, _MageIdle[_Casters[0]->MageSelection], 0, 1, 1, 0xFFFFFFFF, animationFrame);
+        GRRLIB_DrawTile(p2posX, topY, _MageIdle[_Casters[1]->MageSelection], 0, -1, 1, 0xFFFFFFFF, animationFrame);
+        GRRLIB_DrawTile(p3posX, botY, _MageIdle[_Casters[2]->MageSelection], 0, 1, 1, 0xFFFFFFFF, animationFrame);
+        GRRLIB_DrawTile(p4posX , botY, _MageIdle[_Casters[3]->MageSelection], 0, -1, 1, 0xFFFFFFFF, animationFrame);
+
+        animationFrame++;
+
+    } //update visual state
 }
 
 void Game::ResloveFrame(Caster* caster)

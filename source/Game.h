@@ -22,6 +22,9 @@ private:
     int lobby = 2; 
     int arena = 3; 
     int credits = 4;
+    int transitionDelay = 0;
+    int animationFrame = 0;
+    bool allReady = false;
     void UpdatePosition(Caster* caster, int topY, int botY, int leftX, int rightX, int offset);
     void UpdateLife(Caster* caster, int topY, int botY, int leftX, int rightX, int offset);
     void UpdateMana(Caster* caster, int topY, int botY, int leftX, int rightX, int offset);
