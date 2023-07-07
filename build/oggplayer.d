@@ -1,9 +1,15 @@
-main.o: \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/main.cpp \
- C:/devkitPro/portlibs/gamecube/include/grrlib.h \
+oggplayer.o: \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/oggplayer.c \
+ C:/devkitPro/libogc/include/asndlib.h \
+ C:/devkitPro/libogc/include/gctypes.h \
+ C:/devkitPro/portlibs/ppc/include/tremor/ivorbiscodec.h \
+ C:/devkitPro/portlibs/ppc/include/ogg/ogg.h \
+ C:/devkitPro/portlibs/ppc/include/ogg/os_types.h \
+ C:/devkitPro/portlibs/ppc/include/ogg/config_types.h \
+ C:/devkitPro/portlibs/ppc/include/tremor/ivorbisfile.h \
+ C:/devkitPro/portlibs/ppc/include/tremor/ivorbiscodec.h \
  C:/devkitPro/libogc/include/gccore.h \
  C:/devkitPro/libogc/include/ogc/dsp.h \
- C:/devkitPro/libogc/include/gctypes.h \
  C:/devkitPro/libogc/include/ogc/aram.h \
  C:/devkitPro/libogc/include/gcbool.h \
  C:/devkitPro/libogc/include/ogc/arqueue.h \
@@ -42,33 +48,17 @@ main.o: \
  C:/devkitPro/libogc/include/ogc/usbgecko.h \
  C:/devkitPro/libogc/include/ogc/video_types.h \
  C:/devkitPro/libogc/include/ogc/texconv.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB__lib.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB__inline.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_clipping.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_collision.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_fbComplex.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_fbGX.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_fbSimple.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_handle.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_pixel.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_settings.h \
- C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_texSetup.h \
- C:/devkitPro/libogc/include/ogc/pad.h \
- C:/devkitPro/libogc/include/ogc/lwp_watchdog.h \
- C:/devkitPro/libogc/include/ogc/lwp_queue.h \
- C:/devkitPro/libogc/include/asndlib.h \
- C:/devkitPro/libogc/include/mp3player.h \
- C:/devkitPro/libogc/include/mad.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/TitleScreenLoop_mp3.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Game.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Controller.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Caster.h \
- D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/FreeMonoBold_ttf.h
-C:/devkitPro/portlibs/gamecube/include/grrlib.h:
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/oggplayer.h
+C:/devkitPro/libogc/include/asndlib.h:
+C:/devkitPro/libogc/include/gctypes.h:
+C:/devkitPro/portlibs/ppc/include/tremor/ivorbiscodec.h:
+C:/devkitPro/portlibs/ppc/include/ogg/ogg.h:
+C:/devkitPro/portlibs/ppc/include/ogg/os_types.h:
+C:/devkitPro/portlibs/ppc/include/ogg/config_types.h:
+C:/devkitPro/portlibs/ppc/include/tremor/ivorbisfile.h:
+C:/devkitPro/portlibs/ppc/include/tremor/ivorbiscodec.h:
 C:/devkitPro/libogc/include/gccore.h:
 C:/devkitPro/libogc/include/ogc/dsp.h:
-C:/devkitPro/libogc/include/gctypes.h:
 C:/devkitPro/libogc/include/ogc/aram.h:
 C:/devkitPro/libogc/include/gcbool.h:
 C:/devkitPro/libogc/include/ogc/arqueue.h:
@@ -107,26 +97,4 @@ C:/devkitPro/libogc/include/ogc/video_types.h:
 C:/devkitPro/libogc/include/ogc/usbgecko.h:
 C:/devkitPro/libogc/include/ogc/video_types.h:
 C:/devkitPro/libogc/include/ogc/texconv.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB__lib.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB__inline.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_clipping.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_collision.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_fbComplex.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_fbGX.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_fbSimple.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_handle.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_pixel.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_settings.h:
-C:/devkitPro/portlibs/gamecube/include/grrlib/GRRLIB_texSetup.h:
-C:/devkitPro/libogc/include/ogc/pad.h:
-C:/devkitPro/libogc/include/ogc/lwp_watchdog.h:
-C:/devkitPro/libogc/include/ogc/lwp_queue.h:
-C:/devkitPro/libogc/include/asndlib.h:
-C:/devkitPro/libogc/include/mp3player.h:
-C:/devkitPro/libogc/include/mad.h:
-D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/TitleScreenLoop_mp3.h:
-D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Game.h:
-D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Controller.h:
-D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h:
-D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Caster.h:
-D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/FreeMonoBold_ttf.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/oggplayer.h:

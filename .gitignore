@@ -2,3 +2,8 @@
 *.dol
 *.elf
 build/CubeClash_2023.elf.map
+build/TitleMusic.ogg.o
+build/TitleMusic_ogg.h
+build/TitleScreenLoop.mp3.o
+build/TitleScreenLoop_mp3.h
+data/TitleScreenLoop.mp3

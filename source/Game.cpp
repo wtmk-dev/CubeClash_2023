@@ -35,22 +35,17 @@ Game::~Game()
     for (int i = 0; i < MAX_CONTROLLERS; i++)
     {
         delete _Casters[i];
+        GRRLIB_FreeTexture(_MageSelection[i]);
+        GRRLIB_FreeTexture(_MageIdle[i]);
     }
 
     GRRLIB_FreeTexture(title);
     GRRLIB_FreeTexture(mode);
-
-    /*
-    GRRLIB_FreeTexture(mage1Idle);
-    GRRLIB_FreeTexture(mage2);
-    GRRLIB_FreeTexture(mage3);
-    GRRLIB_FreeTexture(mage4);
-    */
 }
 
 void Game::Start()
 {
-    screen = lobby;
+    screen = start;
     _Casters[0]->Init(_Controllers[0]);
     _Casters[1]->Init(_Controllers[1]);
     _Casters[2]->Init(_Controllers[2]);
@@ -293,7 +288,7 @@ void Game::Update()
 
     if(screen == arena)
     {
-        GRRLIB_SetBackgroundColour(0xFF, 0xD7, 0x32, 0xFF);
+        GRRLIB_SetBackgroundColour(0x32, 0x32, 0x32, 0xFF);
 
         if(animationFrame > 4)
         {
@@ -333,12 +328,12 @@ void Game::Update()
 
         if(_Casters[2]->Position > 0)
         {
-            p3posX += 32 * _Casters[0]->Position;
+            p3posX += 32 * _Casters[2]->Position;
         }
 
         if(_Casters[3]->Position > 0)
         {
-            p4posX += 32 * _Casters[1]->Position;
+            p4posX += 32 * _Casters[3]->Position;
         }
 
         GRRLIB_DrawTile(p1posX, topY, _MageIdle[_Casters[0]->MageSelection], 0, 1, 1, 0xFFFFFFFF, animationFrame);

@@ -7,9 +7,15 @@
 #include <stdio.h>
 #include <ogc/pad.h>
 #include <ogc/lwp_watchdog.h>   // Needed for gettime and ticks_to_millisecs
+#include <gccore.h>
+#include <asndlib.h>
+#include <mp3player.h>
+
+#include "TitleScreenLoop_mp3.h"
 
 #include "Game.h"
 #include "Caster.h"
+
 
 // Font
 #include "FreeMonoBold_ttf.h"
@@ -39,12 +45,18 @@ int main(int argc, char **argv)
 {
     bool ShowFPS = false;
 
-    //Int GRRLIB
+    // Initialise the video system
+	VIDEO_Init();
+
+	// Initialise the attached controllers
+	PAD_Init();
+
+	// Initialise the audio subsystem
+	ASND_Init();
+	MP3Player_Init();
+    
     // Initialise the Graphics & Video subsystem
     GRRLIB_Init();
-
-    // Initialise the controllers
-    PAD_Init();
 
     // Load the font from memory
     GRRLIB_ttfFont* myFont = GRRLIB_LoadTTF(FreeMonoBold_ttf, FreeMonoBold_ttf_size);
@@ -70,6 +82,8 @@ int main(int argc, char **argv)
     game->SetFont(myFont);
     game->Start();
 
+    
+
     // Loop forever
     while (1)
     {
@@ -83,6 +97,15 @@ int main(int argc, char **argv)
 
         PAD_ScanPads();  //Scan the GameCube controllers
         game->Update();  //Update game logic    
+
+        if(game->screen == 0)
+        {
+            if(!MP3Player_IsPlaying())
+            {
+                MP3Player_PlayBuffer(TitleScreenLoop_mp3, TitleScreenLoop_mp3_size, NULL);
+            }
+        }
+
         GRRLIB_Render(); // Render the frame buffer to the TV
     }
 
@@ -92,7 +115,8 @@ int main(int argc, char **argv)
     }
 
     delete game;
-
+    
+    ASND_End();
     GRRLIB_Exit(); // Be a good person, clear the memory allocated by GRRLIB
     return 0;
 }

@@ -16,7 +16,6 @@ private:
     GRRLIB_texImg* mode, mage1Idle, mage2, mage3, mage4;
     GRRLIB_texImg* _MageSelection[5];
     GRRLIB_texImg* _MageIdle[MAX_CONTROLLERS];
-    int screen = 0; 
     int start = 0;
     int tutorial = 1; 
     int lobby = 2; 
@@ -35,6 +34,7 @@ private:
     void UpdateProperty(int location, int topY, int botY, int leftX, int rightX, int offset, std::string str);
     void ResloveFrame(Caster* caster);
 public:
+    int screen = 0; 
     Game(Controller* controllers[]);
     ~Game();
     void Start();
