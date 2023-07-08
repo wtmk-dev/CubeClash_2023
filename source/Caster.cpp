@@ -50,7 +50,12 @@ void Caster::Update()
             Mana += base + Combo * ChargeScaler;
         }else if(Mana > 100)
         {
-            Mana -= base * ChargeScaler;
+            Mana -= base + Combo * ChargeScaler;
+
+            if(Mana > 0)
+            {
+                Mana = 100;
+            }
         }
 
         if(Charge > 0)
@@ -191,27 +196,21 @@ void Caster::UpdatePosition()
 void Caster::Init(Controller* controller)
 {
     _Controller = controller;
-
-    Location = _Controller->Port;
-    Position = 1;
-    Target = GetDefaultTarget();
-
-    Life = 100;
-    Mana = 100;
+    Reset();
 }
 
 int Caster::GetDefaultTarget()
 {
-    if(Position == 0)
+    if(Location == 0)
     {
         return 3;
-    }else if (Position == 1)
+    }else if (Location == 1)
     {
         return 2;
-    }else if(Position == 2)
+    }else if(Location == 2)
     {
         return 0;
-    }else if(Position == 3)
+    }else if(Location == 3)
     {
         return 1;
     }
@@ -226,18 +225,19 @@ void Caster::SetController(Controller* controller)
 
 void Caster::Reset()
 {
+    Location = _Controller->Port;
+    Position = 1;
+    Target = GetDefaultTarget();
+
     Life = 100;
-    Mana = 100;
-
-    Location = -1;         // place on screen -1 is not assigned. Set with controller.
-    Position = 1;          // space on platform can be 0, 1, 2: 1 is default
-
-    Target = -1;           // the place on screen you are trying to hit -1 is not assigned
-    TargetPosition = 1;    // space on platform you are trying to hit: 1 is default
+    Mana = 100;    // space on platform you are trying to hit: 1 is default
 
     Spell = 0;             // what spell are you casting this frame:
 
     Combo = 0;             // how many hits before you have been hit increase damage
 
     Charge = 0;            // % charged this frame.
+
+    IsLockedIn = false;
+    IsInLobby = false;
 }

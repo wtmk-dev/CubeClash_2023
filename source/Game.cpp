@@ -127,9 +127,11 @@ void Game::Update()
         {
             GRRLIB_DrawImg(100, 300, mode, 0, 1, 1, 0xFFFFFFFF);
 
+            /*
             std::string noob = "_ Hold LEFT for noob mode";
             auto cnoob = noob.c_str();
             GRRLIB_PrintfTTF(150 + 1, 340 + 1, _Font, cnoob, 12, 0x000000FF);
+            */
 
             std::string pvp = "_ Hold RIGHT for pvp mode";
             auto cpvp = pvp.c_str();
@@ -207,6 +209,10 @@ void Game::Update()
 
             if(transitionDelay >= 240)
             {
+                for (int i = 0; i < MAX_CONTROLLERS; i++)
+                {
+                    _Casters[i]->Reset();
+                }
                 screen = arena;
             }
         }
@@ -294,6 +300,10 @@ void Game::Update()
     }else if(screen == credits)
     {
         GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
+
+        GRRLIB_PrintfTTF(0, 480/2, _Font, "Thanks for playing!", 32, 0xFFFFFFFF);
+        GRRLIB_PrintfTTF(640/3, 480/2-100, _Font, "-WTMK-", 32, 0xFFFFFFFF);
+        GRRLIB_PrintfTTF(0, 480/2-160, _Font, "Created by Brandon Khan for cube clash 2023", 24, 0xFFFFFFFF);
     }
     
     for(int i = 0; i < MAX_CONTROLLERS; i++)
@@ -427,12 +437,12 @@ void Game::Update()
 
                         if(_Casters[i]->Target == 2)
                         {
-                            GRRLIB_DrawImg(p3posX, botY, _MageSpell[caster->Spell], 0, 1, 1, 0xFFFFFFFF);
+                            GRRLIB_DrawImg(p3posX, botY, _MageSpell[caster->Spell], 0, -1, 1, 0xFFFFFFFF);
                         }
 
                         if(_Casters[i]->Target == 3)
                         {
-                            GRRLIB_DrawImg(p4posX, botY, _MageSpell[caster->Spell], 0, 1, 1, 0xFFFFFFFF);
+                            GRRLIB_DrawImg(p4posX, botY, _MageSpell[caster->Spell], 0, -1, 1, 0xFFFFFFFF);
                         }
                     }
                 }
@@ -463,12 +473,12 @@ void Game::Update()
             }
         }
 
-        animationFrame++;
-
         if(dead >= 3)
         {
             GRRLIB_PrintfTTF(640/2, 480/2, _Font, "WINNER!", 32, 0x000000FF);
         }
+
+        animationFrame++;
     } //update visual state
 }
 
