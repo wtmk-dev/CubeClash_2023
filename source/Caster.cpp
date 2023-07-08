@@ -19,8 +19,8 @@ void Caster::Update()
         if(Mana > 0)
         {
             UpdateSpell();
-            Charge += base + Combo * ChargeScaler;
-            Mana -= Charge * 0.01;
+            Charge += base + Combo * 0.05;
+            Mana -= Charge * 0.05;
         }    
     }
     else if(_Controller->A_WasReleasedThisFrame ||

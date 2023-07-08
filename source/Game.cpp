@@ -54,6 +54,7 @@ Game::~Game()
 void Game::Start()
 {
     screen = start;
+
     _Casters[0]->Init(_Controllers[0]);
     _Casters[1]->Init(_Controllers[1]);
     _Casters[2]->Init(_Controllers[2]);
@@ -304,6 +305,7 @@ void Game::Update()
         GRRLIB_PrintfTTF(0, 480/2, _Font, "Thanks for playing!", 32, 0xFFFFFFFF);
         GRRLIB_PrintfTTF(640/3, 480/2-100, _Font, "-WTMK-", 32, 0xFFFFFFFF);
         GRRLIB_PrintfTTF(0, 480/2-160, _Font, "Created by Brandon Khan for cube clash 2023", 24, 0xFFFFFFFF);
+        GRRLIB_PrintfTTF(0, 480/2-180, _Font, "Music By: Andrea Baroni - https://andreabaroni.com  ", 12, 0xFFFFFFFF);
     }
     
     for(int i = 0; i < MAX_CONTROLLERS; i++)
@@ -432,12 +434,12 @@ void Game::Update()
 
                         if(_Casters[i]->Target == 1)
                         {
-                            GRRLIB_DrawImg(p2posX, topY, _MageSpell[caster->Spell], 0, 1, 1, 0xFFFFFFFF);
+                            GRRLIB_DrawImg(p2posX, topY, _MageSpell[caster->Spell], 0, -1, 1, 0xFFFFFFFF);
                         }
 
                         if(_Casters[i]->Target == 2)
                         {
-                            GRRLIB_DrawImg(p3posX, botY, _MageSpell[caster->Spell], 0, -1, 1, 0xFFFFFFFF);
+                            GRRLIB_DrawImg(p3posX, botY, _MageSpell[caster->Spell], 0, 1, 1, 0xFFFFFFFF);
                         }
 
                         if(_Casters[i]->Target == 3)
@@ -475,7 +477,7 @@ void Game::Update()
 
         if(dead >= 3)
         {
-            GRRLIB_PrintfTTF(640/2, 480/2, _Font, "WINNER!", 32, 0x000000FF);
+            GRRLIB_PrintfTTF(640/3, 480/2, _Font, "WINNER!", 32, 0x000000FF);
         }
 
         animationFrame++;
@@ -487,11 +489,12 @@ void Game::ResloveFrame(Caster* caster)
     if(caster->IsCasting)
     {
         caster->IsCasting = false;
+        bool hasHit = false;
 
         for(int i = 0; i < MAX_CONTROLLERS; i++)
         {
             auto target = _Casters[i];
-            if(target != nullptr)
+            if(target != nullptr && target->Life > 0)
             {
                 if(target->Location == caster->Target)
                 {
@@ -520,6 +523,8 @@ void Game::ResloveFrame(Caster* caster)
                         }
 
                         target->wasHitThisFrame = true;
+                        hasHit = true;
+                        caster->Charge = 0;
 
                         if(damage > 0)
                         {
@@ -528,6 +533,16 @@ void Game::ResloveFrame(Caster* caster)
                     }
                 }
             }
+
+            if(hasHit)
+            {
+                break;
+            }
+        }
+
+        if(!hasHit)
+        {
+            caster->Combo = 0;
         }
     }
 }
