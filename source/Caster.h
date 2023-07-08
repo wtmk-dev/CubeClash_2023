@@ -31,6 +31,8 @@ class Caster
     bool IsCasting;
     bool IsInLobby;
     bool IsLockedIn;
+    bool isShieldActive = false;
+    bool wasHitThisFrame = false;
     int _Shield = 0, _Fire = 1, _Light = 2, _Water = 3;
     int MageSelection = 0;
 };

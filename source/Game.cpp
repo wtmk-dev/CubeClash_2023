@@ -16,6 +16,14 @@
 #include "m3select_png.h"
 #include "m4select_png.h"
 #include "m5select_png.h"
+#include "MageCasting_png.h"
+#include "MageCastingFire_png.h"
+#include "MageCastingWater_png.h"
+#include "MageCastingLight_png.h"
+#include "water_png.h"
+#include "fire_png.h"
+#include "light_png.h"
+#include "shield_png.h"
 
 Game::Game(Controller* controllers[])
 {    
@@ -51,6 +59,11 @@ void Game::Start()
     _Casters[2]->Init(_Controllers[2]);
     _Casters[3]->Init(_Controllers[3]);
 
+    _MageCasting[0] = GRRLIB_LoadTexturePNG(MageCasting_png);
+    _MageCasting[1] = GRRLIB_LoadTexturePNG(MageCastingFire_png);
+    _MageCasting[2] = GRRLIB_LoadTexturePNG(MageCastingLight_png);
+    _MageCasting[3] = GRRLIB_LoadTexturePNG(MageCastingWater_png);
+
     _MageSelection[0] = GRRLIB_LoadTexturePNG(m1select_png);
     _MageSelection[1] = GRRLIB_LoadTexturePNG(m2select_png);
     _MageSelection[2] = GRRLIB_LoadTexturePNG(m3select_png);
@@ -65,11 +78,20 @@ void Game::Start()
     _MageIdle[2] = GRRLIB_LoadTexturePNG(Mage3Idle_png);
     _MageIdle[3] = GRRLIB_LoadTexturePNG(Mage4Idle_png);
 
+    _MageSpell[0] = GRRLIB_LoadTexturePNG(shield_png);
+    _MageSpell[1] = GRRLIB_LoadTexturePNG(fire_png);
+    _MageSpell[2] = GRRLIB_LoadTexturePNG(light_png);
+    _MageSpell[3] = GRRLIB_LoadTexturePNG(water_png);
+
     for (int i = 0; i < MAX_CONTROLLERS; i++)
     {
         if (_MageIdle[i] != nullptr)
         {
             GRRLIB_InitTileSet(_MageIdle[i], 64, 96, 0);
+        }
+        if (_MageCasting[i] != nullptr)
+        {
+            GRRLIB_InitTileSet(_MageCasting[i], 64, 96, 0);
         }
     }
 }
@@ -81,10 +103,15 @@ void Game::Update()
         if (_Controllers[i] != nullptr)
         {
             _Controllers[i]->Update();
+
+            if(_Controllers[i]->Start_WasPressedThisFrame)
+            {
+                screen = credits;
+            }
         }
     }
 
-    if(screen == start)
+    if(screen == 0)
     {
         GRRLIB_SetBackgroundColour(0x0D, 0x37, 0x00, 0xFF);
         GRRLIB_DrawImg(60, 30, title, 0, 1, 1, 0xFFFFFFFF);
@@ -119,7 +146,6 @@ void Game::Update()
 
     }else if(screen == tutorial)
     {
-
     }else if(screen == lobby)
     {
         GRRLIB_SetBackgroundColour(0x37, 0x0D, 0x00, 0xFF);
@@ -266,9 +292,9 @@ void Game::Update()
         GRRLIB_Line(640,480,640,0, 0x000000FF);
 
     }else if(screen == credits)
-        {
-            
-        }
+    {
+        GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
+    }
     
     for(int i = 0; i < MAX_CONTROLLERS; i++)
     {
@@ -278,19 +304,30 @@ void Game::Update()
         }
     } // update inputs from frame
 
-    for(int i = 0; i < MAX_CONTROLLERS; i++)
-    {
-        if(_Casters[i] != nullptr)
-        {
-            ResloveFrame(_Casters[i]);
-        }
-    } // update game state
-
     if(screen == arena)
     {
         GRRLIB_SetBackgroundColour(0x32, 0x32, 0x32, 0xFF);
 
-        if(animationFrame > 4)
+        for(int i = 0; i < MAX_CONTROLLERS; i++)
+        {
+            if(_Casters[i] != nullptr)
+            {
+                if(_Casters[i]->wasHitThisFrame)
+                {
+                    _Casters[i]->Combo = 0;
+                    _Casters[i]->IsCasting = false;
+                    _Casters[i]->wasHitThisFrame = false;
+
+                    if(_Casters[i]->isShieldActive)
+                    {
+                        _Casters[i]->Charge = 0;
+                        _Casters[i]->isShieldActive = false;
+                    }
+                }
+            }
+        }
+
+        if(animationFrame > 5)
         {
             animationFrame = 0;
         }
@@ -300,17 +337,6 @@ void Game::Update()
         auto topY = 80;
         auto botY = 275;
 
-        for(int i = 0; i < MAX_CONTROLLERS; i++)
-        {
-            UpdateLife(_Casters[i],185+25-10,480-100+15,25,640-255,1);
-            UpdateMana(_Casters[i],195+25-10,480-60-25+10,25,640-255,1);
-            UpdateCombo(_Casters[i],100,480-185,110+45,640-170+45,1);
-            UpdateCharging(_Casters[i],160+25-10,480-120+10,30,640-250,1);
-            UpdateSpell(_Casters[i],175+25-10,480-110+15,25,640-255,1);
-            UpdateTarget(_Casters[i],60,480-195-25,10,640-280,1);
-            UpdatePosition(_Casters[i],60-25,480-195-25-25,10,640-280,1);
-        }
-        
         auto p1posX = leftX;
         auto p2posX = rightX;
         auto p3posX = leftX;
@@ -336,13 +362,113 @@ void Game::Update()
             p4posX += 32 * _Casters[3]->Position;
         }
 
-        GRRLIB_DrawTile(p1posX, topY, _MageIdle[_Casters[0]->MageSelection], 0, 1, 1, 0xFFFFFFFF, animationFrame);
-        GRRLIB_DrawTile(p2posX, topY, _MageIdle[_Casters[1]->MageSelection], 0, -1, 1, 0xFFFFFFFF, animationFrame);
-        GRRLIB_DrawTile(p3posX, botY, _MageIdle[_Casters[2]->MageSelection], 0, 1, 1, 0xFFFFFFFF, animationFrame);
-        GRRLIB_DrawTile(p4posX , botY, _MageIdle[_Casters[3]->MageSelection], 0, -1, 1, 0xFFFFFFFF, animationFrame);
+        if(_Casters[0]->Life > 0)
+        {
+            GRRLIB_DrawTile(p1posX, topY, _MageIdle[_Casters[0]->MageSelection], 0, 1, 1, 0xFFFFFFFF, animationFrame);
+        }
+
+        if(_Casters[1]->Life > 0)
+        {
+            GRRLIB_DrawTile(p2posX, topY, _MageIdle[_Casters[1]->MageSelection], 0, -1, 1, 0xFFFFFFFF, animationFrame);
+        }
+
+        if(_Casters[2]->Life > 0)
+        {
+            GRRLIB_DrawTile(p3posX, botY, _MageIdle[_Casters[2]->MageSelection], 0, 1, 1, 0xFFFFFFFF, animationFrame);
+        }
+        
+        if(_Casters[3]->Life > 0)
+        {
+            GRRLIB_DrawTile(p4posX , botY, _MageIdle[_Casters[3]->MageSelection], 0, -1, 1, 0xFFFFFFFF, animationFrame);
+        }
+    
+        for(int i = 0; i < MAX_CONTROLLERS; i++)
+        {
+            auto caster =_Casters[i];
+
+            if(_Casters[i]->isShieldActive)
+            {
+                if(_Casters[i]->Location == 0)
+                {
+                    GRRLIB_DrawImg(p1posX, topY, _MageSpell[0], 0, 1, 1, 0xFFFFFFFF);
+                }
+
+                if(_Casters[i]->Location == 1)
+                {
+                    GRRLIB_DrawImg(p2posX, topY, _MageSpell[0], 0, 1, 1, 0xFFFFFFFF);
+                }
+
+                if(_Casters[i]->Location == 2)
+                {
+                    GRRLIB_DrawImg(p3posX, botY, _MageSpell[0], 0, 1, 1, 0xFFFFFFFF);
+                }
+
+                if(_Casters[i]->Location == 3)
+                {
+                    GRRLIB_DrawImg(p4posX, botY, _MageSpell[0], 0, 1, 1, 0xFFFFFFFF);
+                }
+            }
+
+            if(_Casters[i]->IsCasting && _Casters[i]->Spell != 0)
+            {
+                if(_Casters[_Casters[i]->Target]->Life > 0)
+                {
+                    if(_Casters[_Casters[i]->Target]->Position == _Casters[i]->TargetPosition)
+                    {
+                        if(_Casters[i]->Target == 0)
+                        {
+                            GRRLIB_DrawImg(p1posX, topY, _MageSpell[caster->Spell], 0, 1, 1, 0xFFFFFFFF);
+                        }
+
+                        if(_Casters[i]->Target == 1)
+                        {
+                            GRRLIB_DrawImg(p2posX, topY, _MageSpell[caster->Spell], 0, 1, 1, 0xFFFFFFFF);
+                        }
+
+                        if(_Casters[i]->Target == 2)
+                        {
+                            GRRLIB_DrawImg(p3posX, botY, _MageSpell[caster->Spell], 0, 1, 1, 0xFFFFFFFF);
+                        }
+
+                        if(_Casters[i]->Target == 3)
+                        {
+                            GRRLIB_DrawImg(p4posX, botY, _MageSpell[caster->Spell], 0, 1, 1, 0xFFFFFFFF);
+                        }
+                    }
+                }
+            }
+
+            if(_Casters[i] != nullptr)
+            {
+                ResloveFrame(_Casters[i]);
+            }
+        } // update game state
+
+        int dead = 0;
+        for(int i = 0; i < MAX_CONTROLLERS; i++)
+        {
+            if(_Casters[i]->Life > 0)
+            {
+                UpdateCharging(_Casters[i],p1posX,topY,p2posX,topY,p3posX,botY,p4posX,botY);
+
+                UpdateLife(_Casters[i],185+25-10,480-100+15,25,640-255,1);
+                UpdateMana(_Casters[i],195+25-10,480-60-25+10,25,640-255,1);
+                UpdateCombo(_Casters[i],100,480-185,110+45,640-170+45,1);
+                UpdateSpell(_Casters[i],175+25-10,480-110+15,25,640-255,1);
+                UpdateTarget(_Casters[i],60,480-195-25,10,640-280,1);
+                UpdatePosition(_Casters[i],60-25,480-195-25-25,10,640-280,1);
+            }else
+            {
+                dead++;
+            }
+        }
 
         animationFrame++;
 
+        if(dead >= 3)
+        {
+            GRRLIB_PrintfTTF(640/2, 480/2, _Font, "WINNER!", 32, 0x000000FF);
+        }
     } //update visual state
 }
 
@@ -363,17 +489,14 @@ void Game::ResloveFrame(Caster* caster)
                     {
                         caster->Mana += caster->Charge;
                         caster->Combo++;
-                        target->Combo = 0;
 
                         int damage = 1 + caster->Charge * caster->Combo;
 
                         if(target->IsCharging)
                         {
-                            if(target->Spell == target->_Shield)
+                            if(target->Spell == target->isShieldActive)
                             {
                                 damage -= target->Charge;
-                                target->Mana -= target->Charge;
-                                target->Charge = 0;
                             }else if(target->Spell == target->_Light && caster->Spell == caster->_Fire)
                             {
                                 damage *= 2;
@@ -386,7 +509,12 @@ void Game::ResloveFrame(Caster* caster)
                             }
                         }
 
-                        target->Life -= damage;
+                        target->wasHitThisFrame = true;
+
+                        if(damage > 0)
+                        {
+                            target->Life -= damage;
+                        }
                     }
                 }
             }
@@ -447,11 +575,30 @@ void Game::UpdateSpell(Caster* caster, int topY, int botY, int leftX, int rightX
     UpdateProperty(caster->Location,topY,botY,leftX,rightX,offset,str);
 }
 
-void Game::UpdateCharging(Caster* caster, int topY, int botY, int leftX, int rightX, int offset)
+void Game::UpdateCharging(Caster* caster, int p1x, int p1y, int p2x, int p2y, int p3x, int p3y, int p4x, int p4y)
 {
-    char str[20];
-    sprintf(str, "====== %d ======", caster->IsCharging);
-    UpdateProperty(caster->Location,topY,botY,leftX,rightX,offset,str);
+    if(caster->IsCharging)
+    {
+        if(caster->Location == 0)
+        {
+            GRRLIB_DrawTile(p1x, p1y, _MageCasting[caster->Spell], 0, 1, 1, 0xFFFFFFFF, animationFrame);
+        }
+
+        if(caster->Location == 1)
+        {
+            GRRLIB_DrawTile(p2x, p2y, _MageCasting[caster->Spell], 0, 1, 1, 0xFFFFFFFF, animationFrame);
+        }
+
+        if(caster->Location == 2)
+        {
+            GRRLIB_DrawTile(p3x, p3y, _MageCasting[caster->Spell], 0, 1, 1, 0xFFFFFFFF, animationFrame);
+        }
+
+        if(caster->Location == 3)
+        {
+            GRRLIB_DrawTile(p4x, p4y, _MageCasting[caster->Spell], 0, 1, 1, 0xFFFFFFFF, animationFrame);
+        }
+    }
 }
 
 void Game::UpdateCombo(Caster* caster, int topY, int botY, int leftX, int rightX, int offset)

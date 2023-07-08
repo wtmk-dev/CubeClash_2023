@@ -18,6 +18,7 @@ void Caster::Update()
         IsCharging = true;
         if(Mana > 0)
         {
+            UpdateSpell();
             Charge += base + Combo * ChargeScaler;
             Mana -= Charge * 0.01;
         }    
@@ -29,9 +30,13 @@ void Caster::Update()
         {
             if(IsCharging)
             {
-                UpdateSpell();
                 IsCharging = false;
                 IsCasting = true;
+
+                if(Spell == _Shield)
+                {
+                    isShieldActive = true;
+                }
             }
         }
 
@@ -43,11 +48,17 @@ void Caster::Update()
         if(Mana < 100)
         {
             Mana += base + Combo * ChargeScaler;
+        }else if(Mana > 100)
+        {
+            Mana -= base * ChargeScaler;
         }
 
         if(Charge > 0)
         {
             Charge -= 1;
+        }else if (Charge <= 0)
+        {
+            isShieldActive = false;
         }
     }else
     {
@@ -60,19 +71,16 @@ void Caster::UpdateTargetPosition()
     if(_Controller->Left_WasHeldThisFrame)
     {
         TargetPosition = 0;
-        IsCharging = false;
     }
     else
     if (_Controller->Right_WasHeldThisFrame)
     {
         TargetPosition = 2;
-        IsCharging = false;
     }
     else
     if(_Controller->Up_WasHeldThisFrame)
     {
         TargetPosition = 1;
-        IsCharging = false;
     }
 }
 
@@ -141,22 +149,22 @@ void Caster::UpdateTarget()
 
 void Caster::UpdateSpell()
 {
-    if (_Controller->A_WasReleasedThisFrame)
+    if (_Controller->A_WasHeldThisFrame)
     {
         Spell = _Shield;
     }
     
-    if (_Controller->B_WasReleasedThisFrame)
+    if (_Controller->B_WasHeldThisFrame)
     {
         Spell = _Light;
     }
     
-    if (_Controller->Y_WasReleasedThisFrame)
+    if (_Controller->Y_WasHeldThisFrame)
     {
         Spell = _Fire;
     }
     
-    if (_Controller->X_WasReleasedThisFrame)
+    if (_Controller->X_WasHeldThisFrame)
     {
         Spell = _Water;
     }

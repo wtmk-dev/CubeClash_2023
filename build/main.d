@@ -60,6 +60,9 @@ main.o: \
  C:/devkitPro/libogc/include/mp3player.h \
  C:/devkitPro/libogc/include/mad.h \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/TitleScreenLoop_mp3.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/LobbyScreenLoop_mp3.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/TutorialScreenLoop_mp3.h \
+ D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/ArenaScreenLoop0_mp3.h \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Game.h \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Controller.h \
  D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h \
@@ -125,6 +128,9 @@ C:/devkitPro/libogc/include/asndlib.h:
 C:/devkitPro/libogc/include/mp3player.h:
 C:/devkitPro/libogc/include/mad.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/TitleScreenLoop_mp3.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/LobbyScreenLoop_mp3.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/TutorialScreenLoop_mp3.h:
+D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/build/ArenaScreenLoop0_mp3.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Game.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/Controller.h:
 D:/Development/WTMK/GameJam/2023/CubeClash/CubeClash_2023/source/K.h:

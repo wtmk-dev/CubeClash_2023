@@ -144,13 +144,7 @@ void Controller::UpdateDigitalInput()
     if (buttonsDown & PAD_BUTTON_Y) {
         RunBuffer(DA_Y, YCount);
         Y_WasPressedThisFrame = true;
-    }
-    /*x
-    if (buttonsDown & PAD_BUTTON_Z) {
-        RunBuffer(DA_Z, ZCount);
-        Z_WasPressedThisFrame = true;
-    }
-    */
+    }    
     if (buttonsDown & PAD_BUTTON_UP) {
         RunBuffer(DA_UP, UpCount);
         Up_WasPressedThisFrame = true;
@@ -167,7 +161,10 @@ void Controller::UpdateDigitalInput()
         RunBuffer(DA_RIGHT, RightCount);
         Right_WasPressedThisFrame = true;
     }
-
+    if(buttonsDown & PAD_BUTTON_START)
+    {
+        Start_WasPressedThisFrame = true;
+    }
     // Check for buttons held
     if (buttonsHeld & PAD_BUTTON_A) {
         A_WasHeldThisFrame = true;
@@ -264,6 +261,7 @@ void Controller::ResetPresses()
     Down_WasReleasedThisFrame = false;
     Left_WasReleasedThisFrame = false;
     Right_WasReleasedThisFrame = false;
+    Start_WasPressedThisFrame = false;
 
 }
 

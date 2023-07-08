@@ -12,6 +12,9 @@
 #include <mp3player.h>
 
 #include "TitleScreenLoop_mp3.h"
+#include "LobbyScreenLoop_mp3.h"
+#include "TutorialScreenLoop_mp3.h"
+#include "ArenaScreenLoop0_mp3.h"
 
 #include "Game.h"
 #include "Caster.h"
@@ -40,6 +43,8 @@
 
 // Prototype
 static u8 CalculateFrameRate();
+static int _CurrentScreen;
+static int _PreviousScreen;
 
 int main(int argc, char **argv)
 {
@@ -82,8 +87,6 @@ int main(int argc, char **argv)
     game->SetFont(myFont);
     game->Start();
 
-    
-
     // Loop forever
     while (1)
     {
@@ -96,13 +99,61 @@ int main(int argc, char **argv)
         }
 
         PAD_ScanPads();  //Scan the GameCube controllers
-        game->Update();  //Update game logic    
+        game->Update();  //Update game logic
+
+        if(_CurrentScreen != game->screen)
+        {
+            MP3Player_Stop();
+            game->allReady = false;
+
+            if(game->screen == -1)
+            {
+                game->screen = 4;
+                _PreviousScreen = _CurrentScreen;
+                _CurrentScreen = 4;
+            }else
+            {
+                _PreviousScreen = _CurrentScreen;
+                auto value = game->screen;
+                _CurrentScreen = value;
+            }
+        }
 
         if(game->screen == 0)
         {
             if(!MP3Player_IsPlaying())
             {
                 MP3Player_PlayBuffer(TitleScreenLoop_mp3, TitleScreenLoop_mp3_size, NULL);
+            }
+        }else if(game->screen == 1)
+        {
+            if(!MP3Player_IsPlaying())
+            {
+                MP3Player_PlayBuffer(TutorialScreenLoop_mp3, TutorialScreenLoop_mp3_size, NULL);
+            }
+        }else if(game->screen == 2)
+        {
+            if(!MP3Player_IsPlaying())
+            {
+                MP3Player_PlayBuffer(LobbyScreenLoop_mp3, LobbyScreenLoop_mp3_size, NULL);
+            }
+        }else if(game->screen == 3)
+        {
+            if(!MP3Player_IsPlaying())
+            {
+                MP3Player_PlayBuffer(ArenaScreenLoop0_mp3, ArenaScreenLoop0_mp3_size, NULL);
+            }
+        }else if(game->screen == 4)
+        {
+            if(Controllers[0]->B_WasPressedThisFrame)
+            {
+                auto value = _PreviousScreen;
+                game->screen = value;
+            }
+
+            if(Controllers[0]->Y_WasPressedThisFrame)
+            {
+                game->screen = 0;
             }
         }
 
